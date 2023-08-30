@@ -1,4 +1,6 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.parseJSONAsync2 = void 0;
 // 2.2.2　エラーハンドリング
 // *************************************************
 function parseJSONSync(json) {
@@ -10,16 +12,16 @@ function parseJSONSync(json) {
     }
 }
 // エラーになる
-parseJSONSync('不正なJSON');
+// parseJSONSync('不正なJSON');
 // 正常に通過する
-const checkJSON = parseJSONSync('{"message":"Hello","to":"World"}');
-console.log(checkJSON);
+// const checkJSON = parseJSONSync('{"message":"Hello","to":"World"}');
+// console.log(checkJSON);
 // ********************
 // try catchではコールバックの中で発生した、エラーをハンドリングできない
 // ********************
 function parseJSONAsync(json, callback) {
     try {
-        setTimeout(() => {
+        setTimeout(function () {
             callback(JSON.parse(json));
         }, 1000);
     }
@@ -30,9 +32,11 @@ function parseJSONAsync(json, callback) {
 }
 // エラーをキャッチできず、クラッシュする
 //parseJSONAsync('不正なJSON', (result) => console.log('parse結果', result));
-parseJSONAsync('{"message":"Hello","to":"World"}', (result) => console.log('parse結果', result));
+// parseJSONAsync('{"message":"Hello","to":"World"}', (result) =>
+// 	console.log('parse結果', result)
+// );
 function parseJSONAsync2(json, callback) {
-    setTimeout(() => {
+    setTimeout(function () {
         try {
             callback(null, JSON.parse(json));
         }
@@ -41,5 +45,11 @@ function parseJSONAsync2(json, callback) {
         }
     }, 1000);
 }
-parseJSONAsync2('不正なJSON', (err, result) => console.log('parse結果', err, result));
-parseJSONAsync2('{"message":"Hello","to":"World"}', (err, result) => console.log('parse結果', err, result));
+exports.parseJSONAsync2 = parseJSONAsync2;
+;
+parseJSONAsync2('不正なJSON', function (err, result) {
+    return console.log('parse結果', err, result);
+});
+parseJSONAsync2('{"message":"Hello","to":"World"}', function (err, result) {
+    return console.log('parse結果', err, result);
+});
