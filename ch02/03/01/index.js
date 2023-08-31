@@ -3,13 +3,13 @@
 function parseJSONAsync(json) {
     // Promiseインスタンスを生成して返す（この時点ではpending状態）
     return new Promise(function (resolve, reject) {
-        setTimeout(function () {
+        return setTimeout(function () {
             try {
                 // fullfilled状態にする（解決）
                 resolve(JSON.parse(json));
             }
             catch (err) {
-                // reject状態にする
+                // reject状態にする（拒否）
                 reject(err);
             }
         }, 1000);
@@ -25,3 +25,15 @@ setTimeout(function () {
     console.log(toBeFulfilled);
     // console.log(toBeRejected);
 }, 1000);
+// コンストラクタを使ってfullfilledなPromiseインスタンスを生成
+var toBeFulfilled2 = new Promise(function (resolve) { return resolve({ foo: 1 }); });
+console.log(toBeFulfilled2);
+// Promise.resolve()を使ってfullfilledなPromiseインスタンスを生成
+var toBeFulfilled3 = Promise.resolve({ foo: 1 });
+console.log(toBeFulfilled3);
+// コンストラクタを使ってrejectedなPromiseインスタンスを生成
+var toBeRejected2 = new Promise(function (reject) { return reject(new Error('エラー')); });
+console.log(toBeRejected2);
+// Promise.reject()を使ってrejectedなPromiseインスランスを生成
+// const toBeRejected3 = Promise.reject(new Error('エラー'));
+// console.log(toBeRejected3);
