@@ -104,3 +104,6 @@ noneFulfilled.catch(err => console.log(err.errors[1]));
 
 Promise.any([]);
 Promise.any([]).catch(err => console.log(err.erros));
+
+// 2.3.3.5　ショートサーキットの条件による各メソッドの分類
+// *************************************************

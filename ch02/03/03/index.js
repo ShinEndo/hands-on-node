@@ -85,3 +85,5 @@ noneFulfilled.catch(function (err) { return console.log(err.errors[0]); });
 noneFulfilled.catch(function (err) { return console.log(err.errors[1]); });
 Promise.any([]);
 Promise.any([]).catch(function (err) { return console.log(err.erros); });
+// 2.3.3.5　ショートサーキットの条件による各メソッドの分類
+// *************************************************
