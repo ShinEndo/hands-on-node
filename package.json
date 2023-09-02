@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/ShinEndo/hands-on-node#readme",
   "devDependencies": {
-    "@types/node": "^20.5.7"
+    "@types/node": "^20.5.8"
   }
 }
