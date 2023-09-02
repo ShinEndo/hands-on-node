@@ -22,3 +22,28 @@ generator.next();
 generator.next();
 generator.next();
 generator.next();
+
+// 2.4.2　イテレータとイテラブル
+// *************************************************
+
+const generator2 = generatiorFunc();
+const iterator = generator2[Symbol.iterator]();
+
+iterator.next();
+iterator.next();
+iterator.next();
+iterator.next();
+iterator.next();
+
+iterator === generator2;
+
+const generator3 = generatiorFunc();
+
+for(const v of generator3) { console.log('for ... of',v)}
+
+const arrayIterator = [1,2,3][Symbol.iterator]();
+
+arrayIterator.next();
+arrayIterator.next();
+arrayIterator.next();
+arrayIterator.next();
