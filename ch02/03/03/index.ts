@@ -71,3 +71,15 @@ function withTimeout(promise,timeout) {
 // const promise = new Promise(resolve => setTimeout(()=>resolve(1),20));
 const shouldBeResolved = withTimeout(new Promise(resolve => setTimeout(()=>resolve(1),20)),30);
 const shouldBeRejected = withTimeout(new Promise(resolve => setTimeout(()=>resolve(1),20)),10);
+
+// 2.3.3.3　Promise.allSettled()
+// *************************************************
+const allSettled = Promise.allSettled([
+    1,
+    Promise.resolve('foo'),
+    Promise.reject(new Error('エラー')),
+    Promise.resolve(true)
+]);
+allSettled;
+
+Promise.allSettled([]);
