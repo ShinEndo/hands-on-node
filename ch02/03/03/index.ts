@@ -83,3 +83,24 @@ const allSettled = Promise.allSettled([
 allSettled;
 
 Promise.allSettled([]);
+
+// 2.3.3.4　Promise.any()
+// *************************************************
+const anyFulfilled = Promise.any([
+    Promise.resolve('foo'),
+    Promise.reject(new Error('エラー')),
+    Promise.resolve(true)
+]);
+
+const noneFulfilled = Promise.any([
+    Promise.reject(new Error('エラー1')),
+    Promise.reject(new Error('エラー2')),
+]);
+noneFulfilled;
+
+noneFulfilled.catch(err => console.log(err.errors));
+noneFulfilled.catch(err => console.log(err.errors[0]));
+noneFulfilled.catch(err => console.log(err.errors[1]));
+
+Promise.any([]);
+Promise.any([]).catch(err => console.log(err.erros));

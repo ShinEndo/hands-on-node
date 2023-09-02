@@ -68,3 +68,20 @@ var allSettled = Promise.allSettled([
 ]);
 allSettled;
 Promise.allSettled([]);
+// 2.3.3.4　Promise.any()
+// *************************************************
+var anyFulfilled = Promise.any([
+    Promise.resolve('foo'),
+    Promise.reject(new Error('エラー')),
+    Promise.resolve(true)
+]);
+var noneFulfilled = Promise.any([
+    Promise.reject(new Error('エラー1')),
+    Promise.reject(new Error('エラー2')),
+]);
+noneFulfilled;
+noneFulfilled.catch(function (err) { return console.log(err.errors); });
+noneFulfilled.catch(function (err) { return console.log(err.errors[0]); });
+noneFulfilled.catch(function (err) { return console.log(err.errors[1]); });
+Promise.any([]);
+Promise.any([]).catch(function (err) { return console.log(err.erros); });
