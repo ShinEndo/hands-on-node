@@ -39,3 +39,33 @@ arrayIterator.next();
 arrayIterator.next();
 arrayIterator.next();
 arrayIterator.next();
+// 2.4.3　引数を渡したnext()の実行、およびthrow()
+// *************************************************
+function* resetableGeneratorFunc() {
+    let count = 0;
+    while (true) {
+        if (yield count++) {
+            count = 0;
+        }
+    }
+}
+const resetableGenerator = resetableGeneratorFunc();
+resetableGenerator.next();
+resetableGenerator.next();
+resetableGenerator.next();
+resetableGenerator.next();
+resetableGenerator.next();
+resetableGenerator.next(true);
+function* tryCatchGeneratorFunc() {
+    try {
+        yield 1;
+    }
+    catch (err) {
+        console.log('エラーをキャッチ', err);
+        yield 2;
+    }
+}
+const tryCatchGenerator = tryCatchGeneratorFunc();
+tryCatchGenerator.next();
+tryCatchGenerator.throw(new Error('エラー'));
+tryCatchGenerator.next();
