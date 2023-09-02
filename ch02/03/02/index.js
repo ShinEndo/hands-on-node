@@ -42,3 +42,20 @@ withoutOnFulfilled;
 // catch()の利用で同じ処理になる
 var catchedPromise = Promise.reject(new Error('エラー')).catch(function () { return 0; });
 catchedPromise;
+// 2.3.2.3　finally()
+// *************************************************
+var onFinally = function () { return console.log('finallyのコールバック'); };
+Promise.resolve().finally(onFinally);
+Promise.reject(new Error('エラー')).finally(onFinally);
+var returnValueInFinally = Promise.resolve(0).finally(function () { return 2; });
+returnValueInFinally;
+var throwErrorInFinally = Promise.resolve(1).finally(function () { throw new Error('エラー'); });
+throwErrorInFinally;
+Promise.resolve('foo').finally(function () {
+    return new Promise(function (resolve) {
+        return setTimeout(function () {
+            console.log('finally()で1秒経過');
+            resolve();
+        }, 1000);
+    });
+}).then(console.log);

@@ -50,8 +50,25 @@ withoutOnFulfilled;
 const catchedPromise = Promise.reject(new Error('エラー')).catch(()=>0);
 catchedPromise;
 
+// 2.3.2.3　finally()
+// *************************************************
+const onFinally = () => console.log('finallyのコールバック');
+Promise.resolve().finally(onFinally);
+Promise.reject(new Error('エラー')).finally(onFinally);
 
+const returnValueInFinally = Promise.resolve(0).finally(()=>2);
+returnValueInFinally;
 
+const throwErrorInFinally = Promise.resolve(1).finally(()=>{throw new Error('エラー')});
+throwErrorInFinally;
+
+Promise.resolve('foo').finally(()=>
+    new Promise<void>(resolve =>
+        setTimeout(()=>{
+            console.log('finally()で1秒経過');
+            resolve();
+         },1000))
+).then(console.log);
 
 
 
