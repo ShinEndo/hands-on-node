@@ -29,3 +29,45 @@ function asyncFunc() {
 const start = performance.now();
 asyncFunc().then(asyncFunc).then(asyncFunc).then(asyncFunc).then(()=>console.log('逐次実行所要時間', performance.now() - start));
 Promise.all([asyncFunc,asyncFunc,asyncFunc,asyncFunc]).then(()=>console.log('並行実行所要時間', performance.now() - start));
+
+// 2.3.3.2　Promise.race()
+// *************************************************
+function wait(time) {
+    return new Promise(resolve => setTimeout(resolve,time));
+}
+
+const fulfilledFirst = Promise.race([
+    wait(10).then(()=>1),
+    wait(20).then(()=>'foo'),
+    wait(30).then(()=>Promise.reject(new Error('エラー'))),
+]);
+
+const rejectFirst = Promise.race([
+    wait(20).then(()=>1),
+    wait(30).then(()=>'foo'),
+    wait(10).then(()=> Promise.reject(new Error('エラー'))),
+]);
+
+const containsNonPromise = Promise.race([
+    wait(10).then(()=>1),
+    'foo',
+    wait(20).then(()=>Promise.reject(new Error('エラー'))),
+]);
+
+fulfilledFirst;
+rejectFirst;
+containsNonPromise;
+
+const raceWithEmptyArray = Promise.race([]);
+raceWithEmptyArray;
+
+function withTimeout(promise,timeout) {
+    return Promise.race([
+        promise,
+        new Promise((_,reject) => setTimeout(()=>reject(new Error('タイムアウト')),timeout)),
+    ])
+}
+
+// const promise = new Promise(resolve => setTimeout(()=>resolve(1),20));
+const shouldBeResolved = withTimeout(new Promise(resolve => setTimeout(()=>resolve(1),20)),30);
+const shouldBeRejected = withTimeout(new Promise(resolve => setTimeout(()=>resolve(1),20)),10);
