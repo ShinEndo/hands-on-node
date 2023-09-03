@@ -19,5 +19,6 @@
   "homepage": "https://github.com/ShinEndo/hands-on-node#readme",
   "devDependencies": {
     "@types/node": "^20.5.8"
-  }
+  },
+  "type": "module"
 }
