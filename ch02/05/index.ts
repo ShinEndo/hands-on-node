@@ -49,3 +49,36 @@ console.log('asnyc関数外の処理はawaitの影響を受けない');
 // *************************************************
 // 2.5.4　トップレベルawait
 // *************************************************
+// [ Memo ]
+// REPLでトップレベルawaitを使用する
+// ------------------------------
+// node --experimental-repl-await
+// ex) await Promise.resolve('foo'); 
+// 2.5.5　for await ... of
+// *************************************************
+// type IteratorResult<T> = {   value: T;   done: boolean; } | {   value?: undefined;   done: true; }
+interface IteratorResult<T> {
+    done: boolean;
+    value?: T;
+  }
+
+const asyncIterable = {
+    [Symbol.asyncIterator](){
+        let i = 0;
+        // asyncイテレータ
+        return {
+            next() : Promise<IteratorResult<number>> {
+                if(i > 3) {
+                    return Promise.resolve({done: true});
+                }
+                return new Promise(resolve => setTimeout(()=>resolve({value: i++,done: false}),100));
+            }
+        }
+    }
+}
+
+for await (const element of asyncIterable){
+    console.log(element);
+};
+
+export {}
