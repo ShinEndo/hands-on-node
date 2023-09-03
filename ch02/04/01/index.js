@@ -119,3 +119,5 @@ function handleAsyncWithGenerator(generator, resolved = null) {
 }
 handleAsyncWithGenerator(asyncWithGeneratorFunc('{"foo":1}'));
 handleAsyncWithGenerator(asyncWithGeneratorFunc('不正なJSON'));
+// 2.4.5　非同期プログラミング以外のジェネレータの利用例
+// *************************************************
