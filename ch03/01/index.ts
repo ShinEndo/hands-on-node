@@ -42,7 +42,7 @@ const eventEmitter = new events.EventEmitter();
 // この関数には一部問題がある
 function createFizzBuzzEventEmitter(until) {
 	const eventEmitter = new events.EventEmitter();
-	_emitFizzBuzz(eventEmitter, until);
+	process.nextTick(()=>_emitFizzBuzz(eventEmitter, until));
 	return eventEmitter;
 }
 
@@ -79,3 +79,21 @@ function BuzzListener(count) {
 function fizzBuzzListener(count) {
 	console.log('FizzBuzz', count);
 }
+
+function endListener(this: any) {
+	console.log('end');
+	// thisはEventEmitterインスタンス
+	// すべてのイベントからリスナを削除する
+	this.off('start',startListener).off('Fizz',fizzListener).off('Buzz',BuzzListener).off('FFizzBuzz', fizzBuzzListener).off('end',endListener);
+}
+
+createFizzBuzzEventEmitter(40).on('start',startListener).on('Fizz',fizzListener).once('Buzz',BuzzListener).on('FizzBuzz',fizzBuzzListener).on('end',endListener);
+createFizzBuzzEventEmitter(40).on('start',startListener).on('Fizz',fizzListener).on('Buzz',BuzzListener).on('FizzBuzz',fizzBuzzListener).on('end',endListener);
+
+createFizzBuzzEventEmitter(0).on('start',startListener).on('end',endListener);
+
+const fooEventEmitter = new events.EventEmitter();
+fooEventEmitter.on('foo', ()=> {
+	console.log('fooイベントリスナの実行');
+});
+console.log('fooイベント発行',fooEventEmitter.emit('foo'));
