@@ -97,3 +97,11 @@ fooEventEmitter.on('foo', ()=> {
 	console.log('fooイベントリスナの実行');
 });
 console.log('fooイベント発行',fooEventEmitter.emit('foo'));
+
+// 3.1.2　EventEmitterとメモリリーク
+// *************************************************
+const barEventEmitter = new events.EventEmitter();
+for(let i = 0; i < 11; i++) {
+	barEventEmitter.on('bar',()=> console.log('bar'));
+}
+
