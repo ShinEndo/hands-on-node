@@ -142,3 +142,7 @@ bazEventListener.emit('baz');
 
 // 全EventEmitterを対象に、MAxListenersのデフォルト値を100にする
 // events.EventEmitter.defaultMaxListeners = 100;
+
+// 3.1.3　エラーハンドリング
+// *************************************************
+// → error-events.ts参照
