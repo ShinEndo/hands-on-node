@@ -42,7 +42,7 @@ const eventEmitter = new events.EventEmitter();
 // この関数には一部問題がある
 function createFizzBuzzEventEmitter(until) {
 	const eventEmitter = new events.EventEmitter();
-	process.nextTick(()=>_emitFizzBuzz(eventEmitter, until));
+	process.nextTick(() => _emitFizzBuzz(eventEmitter, until));
 	return eventEmitter;
 }
 
@@ -84,24 +84,61 @@ function endListener(this: any) {
 	console.log('end');
 	// thisはEventEmitterインスタンス
 	// すべてのイベントからリスナを削除する
-	this.off('start',startListener).off('Fizz',fizzListener).off('Buzz',BuzzListener).off('FFizzBuzz', fizzBuzzListener).off('end',endListener);
+	this.off('start', startListener)
+		.off('Fizz', fizzListener)
+		.off('Buzz', BuzzListener)
+		.off('FFizzBuzz', fizzBuzzListener)
+		.off('end', endListener);
 }
 
-createFizzBuzzEventEmitter(40).on('start',startListener).on('Fizz',fizzListener).once('Buzz',BuzzListener).on('FizzBuzz',fizzBuzzListener).on('end',endListener);
-createFizzBuzzEventEmitter(40).on('start',startListener).on('Fizz',fizzListener).on('Buzz',BuzzListener).on('FizzBuzz',fizzBuzzListener).on('end',endListener);
+createFizzBuzzEventEmitter(40)
+	.on('start', startListener)
+	.on('Fizz', fizzListener)
+	.once('Buzz', BuzzListener)
+	.on('FizzBuzz', fizzBuzzListener)
+	.on('end', endListener);
+createFizzBuzzEventEmitter(40)
+	.on('start', startListener)
+	.on('Fizz', fizzListener)
+	.on('Buzz', BuzzListener)
+	.on('FizzBuzz', fizzBuzzListener)
+	.on('end', endListener);
 
-createFizzBuzzEventEmitter(0).on('start',startListener).on('end',endListener);
+createFizzBuzzEventEmitter(0).on('start', startListener).on('end', endListener);
 
 const fooEventEmitter = new events.EventEmitter();
-fooEventEmitter.on('foo', ()=> {
+fooEventEmitter.on('foo', () => {
 	console.log('fooイベントリスナの実行');
 });
-console.log('fooイベント発行',fooEventEmitter.emit('foo'));
+console.log('fooイベント発行', fooEventEmitter.emit('foo'));
 
 // 3.1.2　EventEmitterとメモリリーク
 // *************************************************
 const barEventEmitter = new events.EventEmitter();
-for(let i = 0; i < 11; i++) {
-	barEventEmitter.on('bar',()=> console.log('bar'));
+for (let i = 0; i < 11; i++) {
+	barEventEmitter.on('bar', () => console.log('bar'));
 }
 
+const messageEveneEmitter = new events.EventEmitter();
+
+// ブロック内での変数（listener）の宣言
+{
+	const listener = () => console.log('Hello');
+	messageEveneEmitter.on('message', listener);
+}
+
+// listener()メソッドでmessageイベントのリスナを取得
+// listenerの参照が残っており、ブロックが終了してもGCの対象にならない
+messageEveneEmitter.listeners('message');
+
+// リスナを100個まで登録できるようにする
+const bazEventListener = new events.EventEmitter();
+bazEventListener.setMaxListeners(100);
+
+for (let i = 0; i < 100; i++) {
+	bazEventListener.on('baz', () => console.log('baz', i));
+}
+bazEventListener.emit('baz');
+
+// 全EventEmitterを対象に、MAxListenersのデフォルト値を100にする
+// events.EventEmitter.defaultMaxListeners = 100;
