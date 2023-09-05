@@ -169,3 +169,41 @@ class FizzBuzzEventEmitter extends events.EventEmitter {
 }
 
 new FizzBuzzEventEmitter().on('start',startListener).on('Fizz',fizzListener).on('Buzz',BuzzListener).on('FizzBuzz',fizzBuzzListener).on('end',endListener).start(100);
+
+// 3.1.5　コールバックパターン形式でイベントリスナを登録する
+// *************************************************
+{
+	const http = require('http');
+
+	// サーバーオブジェクトの生成
+	const server = http.createServer();
+
+	// requestイベントのリスナ登録
+	server.on('request',(req,res) => {
+		// クライアントからのリクエストに対する処理
+	});
+
+	// listeningイベントのリスナ登録
+	server.on('listening',()=>{
+		// ポート待機を開始した際の処理
+	});
+
+	// 8000ポートでリクエストを待機
+	server.listen(8000);
+}
+
+{
+	const http = require('http');
+
+	// サーバーオブジェクトの生成およびrequestイベントのリスナ登録
+	const server = http.createServer((req,res) => {
+		// クライアントからのリクエストに対する処理
+	});
+
+	// ポート監視およびlisteningイベントのリスナ登録
+	server.listen(8000,()=>{
+		// ポート待機を開始した際の処理
+	})
+}
+
+export {}
