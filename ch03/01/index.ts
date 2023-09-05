@@ -206,4 +206,32 @@ new FizzBuzzEventEmitter().on('start',startListener).on('Fizz',fizzListener).on(
 	})
 }
 
-export {}
+// 3.1.6　EventEmitterからのasyncイテラブルの生成
+// *************************************************
+
+const eventAEmitter = new events.EventEmitter();
+
+// asyncイテラブルの生成
+const eventAIterable = events.on(eventAEmitter,'eventA');
+
+// リスナが1つ登録されていることを確認
+eventAEmitter.listeners('eventA');
+
+(async () => {
+	for await (const a of eventAIterable) {
+		// aの値はeventAをemit()したときの引数の配列
+		if(a[0] === 'end') {
+			// endが渡されたらループを抜ける
+			break;
+		}
+		console.log('eventA',a);
+	}
+})();
+
+eventAEmitter.emit('eventA','Hello');
+
+eventAEmitter.emit('eventA','Hello','World');
+
+eventAEmitter.emit('eventA','end');
+
+eventAEmitter.listeners('eventA');
