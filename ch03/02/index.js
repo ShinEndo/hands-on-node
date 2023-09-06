@@ -14,6 +14,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 // 3　EventEmitterとストリーム
 // *************************************************
@@ -39,18 +50,23 @@ function copyFileWithStream(src, dest, cb) {
 fs.writeFileSync('src.txt', 'Hello,World!');
 copyFileWithStream('src.txt', 'dest.txt', function () { return console.log('コピー完了'); });
 var crypto = require("crypto");
-fs.createReadStream('src.txt').pipe(crypto.createHash('sha256')).pipe(fs.createWriteStream('dest.txt')).on('finish', function () { return console.log('コピー完了'); });
+fs.createReadStream('src.txt')
+    .pipe(crypto.createHash('sha256'))
+    .pipe(fs.createWriteStream('dest.txt'))
+    .on('finish', function () { return console.log('コピー完了'); });
 // 3.2.2　読み込みストリーム
 // *************************************************
 var readStream = fs.createReadStream('src.txt');
-readStream.on('readable', function () {
+readStream
+    .on('readable', function () {
     console.log('readble');
     var chunk;
     // 現在読み込み可能なデータをすべて読み込む
     while ((chunk = readStream.read()) !== null) {
         console.log("chunk: ".concat(chunk.toString()));
     }
-}).on('end', function () { return console.log('end'); });
+})
+    .on('end', function () { return console.log('end'); });
 // node --experimental-repl-await
 var stream = require("stream");
 var HelloReadbleStream = /** @class */ (function (_super) {
@@ -79,10 +95,39 @@ var HelloReadbleStream = /** @class */ (function (_super) {
 }(stream.Readable));
 var options = {};
 var helloReadableStream = new HelloReadbleStream(options);
-helloReadableStream.on('readable', function () {
+helloReadableStream
+    .on('readable', function () {
     console.log('readable');
     var chunk;
     while ((chunk = helloReadableStream.read()) !== null) {
         console.log("chunk: ".concat(chunk.toString()));
     }
-}).on('end', function () { return console.log('end'); });
+})
+    .on('end', function () { return console.log('end'); });
+// 3.2.3　書き込みストリーム
+// *************************************************
+// node --experimental-repl-await
+var fileWriteStream = fs.createWriteStream('dest.txt');
+fileWriteStream.write('Hello\n');
+fileWriteStream.write('World\n');
+fileWriteStream.end();
+fs.readFileSync('dest.txt', 'utf8');
+var DelayLogStream = /** @class */ (function (_super) {
+    __extends(DelayLogStream, _super);
+    function DelayLogStream(options) {
+        // objectMode:trueを指定するとオブジェクトをデータとして流せる
+        return _super.call(this, __assign({ objectMode: true }, options)) || this;
+    }
+    DelayLogStream.prototype._write = function (chunk, encoding, callback) {
+        console.log('_write()');
+        var message = chunk.message, delay = chunk.delay;
+        setTimeout(function () {
+            console.log(message);
+            callback();
+        }, delay);
+    };
+    return DelayLogStream;
+}(stream.Writable));
+var delayLogStream = new DelayLogStream({});
+delayLogStream.write({ message: 'Hi', delay: 1000 });
+delayLogStream.write({ message: 'Bye', delay: 100 });
