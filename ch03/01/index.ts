@@ -84,7 +84,11 @@ function endListener(this: any) {
 	console.log('end');
 	// thisはEventEmitterインスタンス
 	// すべてのイベントからリスナを削除する
-	this.off('start', startListener).off('Fizz', fizzListener).off('Buzz', BuzzListener).off('FFizzBuzz', fizzBuzzListener).off('end', endListener);
+	this.off('start', startListener)
+		.off('Fizz', fizzListener)
+		.off('Buzz', BuzzListener)
+		.off('FFizzBuzz', fizzBuzzListener)
+		.off('end', endListener);
 }
 
 createFizzBuzzEventEmitter(40)
@@ -149,26 +153,32 @@ class FizzBuzzEventEmitter extends events.EventEmitter {
 	async start(until) {
 		this.emit('start');
 		let count = 1;
-		while(true) {
-			if(count % 15 === 0) {
-				this.emit('FizzBuzz',count);
+		while (true) {
+			if (count % 15 === 0) {
+				this.emit('FizzBuzz', count);
 			} else if (count % 3 === 0) {
-				this.emit('Fizz',count);
+				this.emit('Fizz', count);
 			} else if (count % 5 === 0) {
-				this.emit('Buzz',count);
+				this.emit('Buzz', count);
 			}
 			count += 1;
 
-			if(count > until) {
+			if (count > until) {
 				break;
 			}
-			await new Promise(resolve => setTimeout(resolve,100));
+			await new Promise((resolve) => setTimeout(resolve, 100));
 		}
 		this.emit('end');
 	}
 }
 
-new FizzBuzzEventEmitter().on('start',startListener).on('Fizz',fizzListener).on('Buzz',BuzzListener).on('FizzBuzz',fizzBuzzListener).on('end',endListener).start(100);
+new FizzBuzzEventEmitter()
+	.on('start', startListener)
+	.on('Fizz', fizzListener)
+	.on('Buzz', BuzzListener)
+	.on('FizzBuzz', fizzBuzzListener)
+	.on('end', endListener)
+	.start(100);
 
 // 3.1.5　コールバックパターン形式でイベントリスナを登録する
 // *************************************************
@@ -179,12 +189,12 @@ new FizzBuzzEventEmitter().on('start',startListener).on('Fizz',fizzListener).on(
 	const server = http.createServer();
 
 	// requestイベントのリスナ登録
-	server.on('request',(req,res) => {
+	server.on('request', (req, res) => {
 		// クライアントからのリクエストに対する処理
 	});
 
 	// listeningイベントのリスナ登録
-	server.on('listening',()=>{
+	server.on('listening', () => {
 		// ポート待機を開始した際の処理
 	});
 
@@ -196,14 +206,14 @@ new FizzBuzzEventEmitter().on('start',startListener).on('Fizz',fizzListener).on(
 	const http = require('http');
 
 	// サーバーオブジェクトの生成およびrequestイベントのリスナ登録
-	const server = http.createServer((req,res) => {
+	const server = http.createServer((req, res) => {
 		// クライアントからのリクエストに対する処理
 	});
 
 	// ポート監視およびlisteningイベントのリスナ登録
-	server.listen(8000,()=>{
+	server.listen(8000, () => {
 		// ポート待機を開始した際の処理
-	})
+	});
 }
 
 // 3.1.6　EventEmitterからのasyncイテラブルの生成
@@ -212,7 +222,7 @@ new FizzBuzzEventEmitter().on('start',startListener).on('Fizz',fizzListener).on(
 const eventAEmitter = new events.EventEmitter();
 
 // asyncイテラブルの生成
-const eventAIterable = events.on(eventAEmitter,'eventA');
+const eventAIterable = events.on(eventAEmitter, 'eventA');
 
 // リスナが1つ登録されていることを確認
 eventAEmitter.listeners('eventA');
@@ -220,18 +230,30 @@ eventAEmitter.listeners('eventA');
 (async () => {
 	for await (const a of eventAIterable) {
 		// aの値はeventAをemit()したときの引数の配列
-		if(a[0] === 'end') {
+		if (a[0] === 'end') {
 			// endが渡されたらループを抜ける
 			break;
 		}
-		console.log('eventA',a);
+		console.log('eventA', a);
 	}
 })();
 
-eventAEmitter.emit('eventA','Hello');
+eventAEmitter.emit('eventA', 'Hello');
 
-eventAEmitter.emit('eventA','Hello','World');
+eventAEmitter.emit('eventA', 'Hello', 'World');
 
-eventAEmitter.emit('eventA','end');
+eventAEmitter.emit('eventA', 'end');
 
 eventAEmitter.listeners('eventA');
+
+// 3.1.7　EventEmitterのPromise化
+// *************************************************
+const eventBEmitter = new events.EventEmitter();
+
+const eventBPromise = events.once(eventBEmitter, 'eventB');
+
+eventBPromise.then((arg) => console.log('eventB発生', arg));
+
+eventBEmitter.emit('eventB', 'Hello', 'World');
+
+eventBEmitter.emit('eventB', 'one more');
