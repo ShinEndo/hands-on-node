@@ -120,9 +120,10 @@ delayLogStream.write({ message: 'Bye', delay: 100 });
 
 // 3.2.4　二重ストリームと変換ストリーム
 // *************************************************
+// node --experimental-repl-await
 class LineTransformStream extends stream.Transform {
 	// 上流から受け取ったデータのうち、下流に流していない分を保持するフィールド
-	remaining: string = '';
+	remaining = '';
 	constructor(options) {
 		//push()にオブジェクトを渡せるようにする
 		super({ readableObjectMode: true, ...options });
@@ -130,7 +131,7 @@ class LineTransformStream extends stream.Transform {
 
 	_transform(chunk, encoding, callback) {
 		console.log('_transform()');
-		const lines: string[] = (chunk + this.remaining).split(/\n/);
+		const lines = (chunk + this.remaining).split(/\n/);
 		// 最後の行は次に入ってくるデータの先頭と同じ行になるため、変数に保持
 		if (lines.length) this.remaining = lines.pop();
 		for (const line of lines) {
@@ -139,4 +140,33 @@ class LineTransformStream extends stream.Transform {
 		}
 		callback();
 	}
+
+    _flush(callback) {
+        console.log('_flush()');
+        this.push({
+            message: this.remaining,
+            delay: this.remaining.length * 100
+        })
+        
+    }
 }
+
+const lineTransformStream = new LineTransformStream({});
+lineTransformStream.on('readable', ()=>{
+    let chunk;
+    while((chunk = lineTransformStream.read()) !== null) {
+        console.log(chunk);
+    }
+});
+
+lineTransformStream.write('foo\nbar');
+
+lineTransformStream.write('baz');
+
+lineTransformStream.end();
+
+const myWritable = new stream.Writable({
+    write(chunk,encoding,callback){
+        // _write()メソッドの実装
+    }
+});
