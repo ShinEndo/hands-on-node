@@ -117,3 +117,26 @@ const delayLogStream = new DelayLogStream({});
 delayLogStream.write({ message: 'Hi', delay: 1000 });
 
 delayLogStream.write({ message: 'Bye', delay: 100 });
+
+// 3.2.4　二重ストリームと変換ストリーム
+// *************************************************
+class LineTransformStream extends stream.Transform {
+	// 上流から受け取ったデータのうち、下流に流していない分を保持するフィールド
+	remaining: string = '';
+	constructor(options) {
+		//push()にオブジェクトを渡せるようにする
+		super({ readableObjectMode: true, ...options });
+	}
+
+	_transform(chunk, encoding, callback) {
+		console.log('_transform()');
+		const lines: string[] = (chunk + this.remaining).split(/\n/);
+		// 最後の行は次に入ってくるデータの先頭と同じ行になるため、変数に保持
+		if (lines.length) this.remaining = lines.pop();
+		for (const line of lines) {
+			// ここではpush()の戻り値は気にしない
+			this.push({ message: line, delay: line.length * 100 });
+		}
+		callback();
+	}
+}
