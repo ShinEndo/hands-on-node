@@ -141,22 +141,21 @@ class LineTransformStream extends stream.Transform {
 		callback();
 	}
 
-    _flush(callback) {
-        console.log('_flush()');
-        this.push({
-            message: this.remaining,
-            delay: this.remaining.length * 100
-        })
-        
-    }
+	_flush(callback) {
+		console.log('_flush()');
+		this.push({
+			message: this.remaining,
+			delay: this.remaining.length * 100,
+		});
+	}
 }
 
 const lineTransformStream = new LineTransformStream({});
-lineTransformStream.on('readable', ()=>{
-    let chunk;
-    while((chunk = lineTransformStream.read()) !== null) {
-        console.log(chunk);
-    }
+lineTransformStream.on('readable', () => {
+	let chunk;
+	while ((chunk = lineTransformStream.read()) !== null) {
+		console.log(chunk);
+	}
 });
 
 lineTransformStream.write('foo\nbar');
@@ -166,7 +165,14 @@ lineTransformStream.write('baz');
 lineTransformStream.end();
 
 const myWritable = new stream.Writable({
-    write(chunk,encoding,callback){
-        // _write()メソッドの実装
-    }
+	write(chunk, encoding, callback) {
+		// _write()メソッドの実装
+	},
 });
+
+// 3.2.5　pipe()によるストリームの連結
+// *************************************************
+new HelloReadbleStream({})
+	.pipe(new LineTransformStream({}))
+	.pipe(new DelayLogStream({}))
+	.on('finish', () => console.log('完了'));
