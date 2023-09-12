@@ -133,7 +133,7 @@ class LineTransformStream extends stream.Transform {
 		console.log('_transform()');
 		const lines = (chunk + this.remaining).split(/\n/);
 		// 最後の行は次に入ってくるデータの先頭と同じ行になるため、変数に保持
-		if (lines.length) this.remaining = lines.pop();
+		if (lines.length) this.remaining = lines.pop() as string;
 		for (const line of lines) {
 			// ここではpush()の戻り値は気にしない
 			this.push({ message: line, delay: line.length * 100 });
@@ -175,4 +175,15 @@ const myWritable = new stream.Writable({
 new HelloReadbleStream({})
 	.pipe(new LineTransformStream({}))
 	.pipe(new DelayLogStream({}))
+	.on('finish', () => console.log('完了'));
+
+new HelloReadbleStream({ highWaterMark: 0 })
+	.pipe(
+		new LineTransformStream({
+			//二重ストリームのhighWaterMarkはwriteとreadでそれぞれ指定が必要
+			writableHighWaterMark: 0,
+			readableHighWaterMark: 0,
+		})
+	)
+	.pipe(new DelayLogStream({ highWaterMark: 0 }))
 	.on('finish', () => console.log('完了'));
