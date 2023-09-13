@@ -172,6 +172,7 @@ const myWritable = new stream.Writable({
 
 // 3.2.5　pipe()によるストリームの連結
 // *************************************************
+import * as path from 'path';
 new HelloReadbleStream({})
 	.pipe(new LineTransformStream({}))
 	.pipe(new DelayLogStream({}))
@@ -187,3 +188,16 @@ new HelloReadbleStream({ highWaterMark: 0 })
 	)
 	.pipe(new DelayLogStream({ highWaterMark: 0 }))
 	.on('finish', () => console.log('完了'));
+
+const ltStream = new LineTransformStream({});
+console.log(ltStream === new HelloReadbleStream({}).pipe(ltStream));
+
+const srcReadStream = fs.createReadStream(path.join(__dirname, 'src.txt'));
+srcReadStream
+	.pipe(fs.createWriteStream(path.join(__dirname, 'dest2.txt'), 'utf8'))
+	.on('finish', () => console.log('分岐1完了'));
+
+srcReadStream
+	.pipe(crypto.createHash('sha256'))
+	.pipe(fs.createWriteStream(path.join(__dirname, 'dest2.crypto.txt')))
+	.on('finish', () => console.log('分岐2完了'));
