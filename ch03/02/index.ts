@@ -201,3 +201,9 @@ srcReadStream
 	.pipe(crypto.createHash('sha256'))
 	.pipe(fs.createWriteStream(path.join(__dirname, 'dest2.crypto.txt')))
 	.on('finish', () => console.log('分岐2完了'));
+
+// 3.2.6　エラーハンドリングとstream.pipeline()
+// *************************************************
+fs.createReadStream(path.join(__dirname, 'no-such-file.txt'))
+	.pipe(fs.createWriteStream(path.join(__dirname, 'dest.txt')))
+	.on('error', (err) => console.log(err.message));
