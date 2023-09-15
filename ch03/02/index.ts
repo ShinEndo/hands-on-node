@@ -204,6 +204,11 @@ srcReadStream
 
 // 3.2.6　エラーハンドリングとstream.pipeline()
 // *************************************************
+// fs.createReadStream(path.join(__dirname, 'no-such-file.txt'))
+// 	.pipe(fs.createWriteStream(path.join(__dirname, 'dest.txt')))
+// 	.on('error', (err) => console.log(err.message));
+
 fs.createReadStream(path.join(__dirname, 'no-such-file.txt'))
+	.on('error', (err) => console.log('エラーイベント', err.message))
 	.pipe(fs.createWriteStream(path.join(__dirname, 'dest.txt')))
-	.on('error', (err) => console.log(err.message));
+	.on('error', (err) => console.log('エラーイベント', err.message));
