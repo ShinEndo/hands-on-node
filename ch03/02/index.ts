@@ -212,3 +212,22 @@ fs.createReadStream(path.join(__dirname, 'no-such-file.txt'))
 	.on('error', (err) => console.log('エラーイベント', err.message))
 	.pipe(fs.createWriteStream(path.join(__dirname, 'dest.txt')))
 	.on('error', (err) => console.log('エラーイベント', err.message));
+
+// 3.2.7　ストリームの異常終了とstream.finished()
+// *************************************************
+import * as util from 'util';
+stream.finished(
+	fs.createReadStream('src.txt').on('data', () => {}),
+	(err) => (err ? console.log(err.message) : console.log('正常終了'))
+);
+
+(async function () {
+	await util
+		.promisify(stream.finished)(
+			fs.createReadStream('src.txt').on('data', () => {})
+		)
+		.then(
+			() => console.log('正常終了'),
+			(err) => console.error(err.message)
+		);
+})();
