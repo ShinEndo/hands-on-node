@@ -231,3 +231,42 @@ stream.finished(
 			(err) => console.error(err.message)
 		);
 })();
+
+// 3.2.8　読み込みストリームとasyncイテラブルの互換性
+// *************************************************
+const helloReadableStream1 = new HelloReadbleStream({}).on('end', () =>
+	console.log('完了')
+);
+(async function () {
+	for await (const data of helloReadableStream1) {
+		console.log('data', data.toString());
+	}
+})();
+
+const helloReadableStream2 = new HelloReadbleStream({ highWaterMark: 0 }).on(
+	'end',
+	() => console.log('完了')
+);
+(async function () {
+	for await (const data of helloReadableStream2) {
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		console.log('data', data.toString());
+	}
+})();
+
+async function* asyncGenerator() {
+	let i = 0;
+	while (i <= 3) {
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		yield `${i++}`;
+	}
+}
+
+const asyncIterable = asyncGenerator();
+const readableFromAsyncIterable = stream.Readable.from(asyncIterable);
+readableFromAsyncIterable.on('data', console.log);
+
+util.promisify(stream.pipeline)(
+	asyncGenerator(),
+	fs.createWriteStream('dest.txt')
+);
