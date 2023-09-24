@@ -1,4 +1,7 @@
-// import * as http from 'http';
+// 4.2　clusterモジュールによるマルチプロセス化
+// *************************************************
+// 4.2.1　Webアプリケーションのマルチプロセス化
+// *************************************************
 const http = require('http');
 const fibonacci = require('./fibonacci');
 
