@@ -3,7 +3,7 @@
 // 4.2.1　Webアプリケーションのマルチプロセス化
 // *************************************************
 const http = require('http');
-const fibonacci = require('./fibonacci');
+const fibonacci = require('./fibonacci.ts');
 
 http.createServer((req, res) => {
 	const n = Number(req.url.substr(1));
