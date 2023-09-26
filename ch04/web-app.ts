@@ -14,3 +14,5 @@ http.createServer((req, res) => {
 	res.end(result.toString());
 }).listen(3000);
 console.log('Accsess to http://localhost:3000/10');
+
+export {};
