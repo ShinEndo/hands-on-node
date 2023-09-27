@@ -7,7 +7,7 @@ const http = require('http');
 const cpuCount = require('os').cpus().length;
 const ThreadPool = require('../thread-pool');
 
-// CPUコア数と同じサイズのスレッドプーリを生成
+// CPUコア数と同じサイズのスレッドプールを生成
 const threadPool = new ThreadPool(cpuCount, `${__dirname}/fibonacci.ts`);
 
 http.createServer(async (req, res) => {
