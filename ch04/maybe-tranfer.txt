@@ -1,0 +1,31 @@
+// 4.3　worker_threadsモジュールによるマルチスレッド化
+// *************************************************
+// 4.3.3 スレッド間通信とIPCの違い
+// *************************************************
+// 4.3.4 スレッド間での値の転送
+// *************************************************
+// REPLで実行
+function useMaybeTransfer(transfer) {
+	// 1 GBのArrayBufferを生成
+	const buffer = new ArrayBuffer(1024 * 1024 * 1024);
+
+	// 現在時刻の記録
+	const start = perf_hooks.performance.now();
+	new worker_threads.Worker('./maybe-transfer.js', {
+		workerData: { buffer, transfer },
+		// transferListプロパティに転送対象オブジェクトを指定
+		transferList: transfer ? [buffer] : [],
+	}).on('message', () => {
+		// サブスレッドから値が戻ってくるまでにかかった時間を出力
+		console.log(perf_hooks.performance.now() - start);
+	});
+
+	// サブスレッドに渡した値がどう見えるか確認
+	console.log(buffer);
+}
+
+// 転送を利用する場合
+useMaybeTransfer(true);
+
+// 転送を利用しない場合
+useMaybeTransfer(false);
