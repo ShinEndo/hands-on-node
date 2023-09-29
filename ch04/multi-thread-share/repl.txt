@@ -1,0 +1,22 @@
+// 4.3　worker_threadsモジュールによるマルチスレッド化
+// *************************************************
+// 4.3.5 スレッド間での値の共有
+// *************************************************
+// 1024バイトのSharedArrayBufferを生成
+const sharedArrayBuffer = new SharedArrayBuffer(1024);
+
+// Uint8Arrayのビューを作成
+const uint8Array = new Uint8Array(sharedArrayBuffer);
+
+// Int32Arrayのビューを作成
+const int32Arary = new Int32Array(sharedArrayBuffer);
+
+// 配列の長さの確認
+uint8Array.length;
+int32Arary.length;
+
+// int32Arrayの値の更新
+int32Arary[0] = 1000;
+
+// uint8Arrayの値の確認
+uint8Array.slice(0,4);
