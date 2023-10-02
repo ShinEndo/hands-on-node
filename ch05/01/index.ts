@@ -28,8 +28,3 @@ const server = http
 		res.end();
 	})
 	.listen(3000);
-
-// HTTPリクエスト（POST)
-http.request('http://localhost:3000/api/todos', { method: 'POST' }, (res) =>
-	console.log('statusCode', res.statusCode)
-).end();
