@@ -1,0 +1,26 @@
+// 5　HTTPサーバとHTTPクライアント
+// *************************************************
+// 5.1 ToDo管理アプリケーション
+// *************************************************
+// 5.2 httpモジュールの利用
+// *************************************************
+// HTTPリクエスト（GET）
+http.request('http://localhost:3000/api/todos', (res) => {
+	let responseData = '';
+	console.log('statusCode', res.statusCode);
+	res.on('data', (chunk) => (responseData += chunk));
+	res.on('end', () => console.log('responseData', JSON.parse(responseData)));
+}).end();
+
+// HTTPリクエスト（POST）
+http.request('http://localhost:3000/api/todos', { method: 'POST' }, (res) =>
+	console.log('statusCode', res.statusCode)
+).end();
+
+// HTTPリクエスト（GET|存在しないURLの場合）
+http.request('http://localhost:3000/api/foo', (res) =>
+	console.log('statusCode', res.statusCode)
+).end();
+
+
+
