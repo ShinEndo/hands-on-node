@@ -1,0 +1,55 @@
+// 5　HTTPサーバとHTTPクライアント
+// *************************************************
+// 5.4 ExpressによるToDo管理アプリケーションの開発
+// *************************************************
+// 5.4.1 GETリクエストのハンドリング
+// *************************************************
+cd ch05/todo-express
+node --experimental-repl-await
+
+require('isomorphic-fetch')
+
+fetch;
+
+await fetch('http://localhost:3000/api/todos');
+
+console.log(_.status, await _.json());
+
+await fetch('http://localhost:3000/api/foo');
+
+console.log(_.status, await _.text());
+
+// クエリパラメータによる絞り込み 
+
+await fetch('http://localhost:3000/api/todos?completed=true');
+
+console.log(_.status, await _.json());
+
+await fetch('http://localhost:3000/api/todos?completed=false');
+
+console.log(_.status, await _.json());
+
+
+// 5.4.2 POSTリクエストのハンドリング
+// *************************************************
+
+// POSTリクエストでTodoを作成
+await fetch('http://localhost:3000/api/todos',{
+	method: 'POST',
+	headers: {
+		'Content-Type': 'application/json',
+	},
+	body: JSON.stringify({title: 'ペン入れ'}),
+});
+
+console.log(_.status, await _.json());
+
+// GETリクエストでToDoが増えたことを確認
+await fetch('http://localhost:3000/api/todos');
+
+console.log(_.status, await _.json());
+
+// エラーハンドリングが正常に機能していることを確認
+await fetch('http://localhost:3000/api/todos', { method: 'POST' });
+
+console.log(_.status, await _.json());
