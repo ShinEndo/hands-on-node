@@ -56,8 +56,12 @@ const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({ dev });
 
 nextApp.prepare().then(
-	// pageディレクトリ内の各REactコンポーネントに対するサーバーサイドルーティング
-	() => app.get('*', nextApp.getRequestHandler()),
+	// pageディレクトリ内の各Reactコンポーネントに対するサーバーサイドルーティング
+	() => {
+		app.get('/', nextApp.getRequestHandler());
+		app.get('/active', nextApp.getRequestHandler());
+		app.get('/completed', nextApp.getRequestHandler());
+	},
 	(err) => {
 		console.error(err);
 		process.exit(1);

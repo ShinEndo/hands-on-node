@@ -33,6 +33,8 @@ export default function Todos(props) {
 	// コンポーネントの状態の初期化と、propsの値に応じた更新
 	const [todos, setTodos] = useState([]);
 
+	
+
 	useEffect(() => {
 		fetch(`/api/todos${fetchQuery}`).then(async (res) =>
 			res.ok ? setTodos(await res.json()) : alert(await res.text())
@@ -44,7 +46,10 @@ export default function Todos(props) {
 		<>
 			<Head>
 				<title>{title}</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+				<style>{`body{display:block !important;}`}</style>
 			</Head>
+			
 			<h1>{title}</h1>
 			{/* Todo一覧の表示 */}
 			<ul>
