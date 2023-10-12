@@ -10,8 +10,15 @@ const pages = {
 	completed: { title: '完了したToDo', completed: true },
 };
 
+// CSRでページを切り替えるためのリンク
+const pageLinks = Object.keys(pages).map((page, index) => (
+	<Link href={`/${page === 'index' ? '' : page}`} key={index}>
+		<a style={{ marginRight: 10 }}>{pages[page].title}</a>
+	</Link>
+));
+
 export default function Todos(props) {
-	const [title, completed] = pages[props.page];
+	const { title, completed } = pages[props.page];
 	const [todos, setTodos] = useState([]);
 
 	// socketをstateとして保持
@@ -33,5 +40,55 @@ export default function Todos(props) {
 	}, [props.page]);
 
 	// JSX
-	return <>{/* ・・・ */}</>;
+	return (
+		<>
+			<Head>
+				<title>{title}</title>
+			</Head>
+			<h1>{title}</h1>
+			<label>
+				新しいToDoを入力
+				<input
+					onKeyDown={(e) => {
+						// Enterキーが押されたToDoを登録する
+						const title = e.target.value;
+						if (e.key !== 'Enter' || !title) return;
+						e.target.value = '';
+						socket.emit('createTodo', title);
+					}}
+				/>
+			</label>
+			{/* ToDo一覧 */}
+			<ul>
+				{todos.map(({ id, title, completed }) => (
+					<li key={id}>
+						<label
+							style={
+								completed
+									? { textDecoration: 'line-through' }
+									: {}
+							}
+						>
+							<input
+								type="checkbox"
+								checked={completed}
+								onChange={(e) =>
+									socket.emit(
+										'updateCompleted',
+										id,
+										e.target.checked
+									)
+								}
+							/>
+							{title}
+						</label>
+						<button onClick={() => socket.emit('deleteTodo', id)}>
+							削除
+						</button>
+					</li>
+				))}
+			</ul>
+			<div>{pageLinks}</div>
+		</>
+	);
 }

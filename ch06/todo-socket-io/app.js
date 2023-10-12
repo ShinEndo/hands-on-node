@@ -11,7 +11,7 @@ let todos = [
 // ToDoのIDの値を管理するための変数
 let id = 2;
 
-const div = process.env.NODE_ENV !== 'production';
+const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({ dev });
 
 nextApp.prepare().then(
@@ -28,29 +28,29 @@ nextApp.prepare().then(
 			console.log('connected');
 			// 接続したクライアントにToDo一覧を送信
 			socket.emit('todos', todos);
-		});
 
-		// 接続したクライアントからの各種イベントに対応
-		socket
-			// ToDo作成
-			.on('createTodo', (title) => {
-				if (typeof title !== 'string' || !title) return;
-				const todo = { id: (id += 1), title, completed: false };
-				todos.push(todo);
-				ioTodos.emit('todos', todos);
-			})
-			// ToDoのcompletedの更新
-			.on('updateCompletd', (id, completed) => {
-				todos = todos.map((todo) =>
-					todo.id === id ? { ...todo, completed } : todo
-				);
-				ioTodos.emit('todos', todos);
-			})
-			// ToDo削除
-			.on('deleteTodo', (id) => {
-				todos = todos.filter((todo) => todo.id !== id);
-				ioTodos.emit('todos', todos);
-			});
+			// 接続したクライアントからの各種イベントに対応
+			socket
+				// ToDo作成
+				.on('createTodo', (title) => {
+					if (typeof title !== 'string' || !title) return;
+					const todo = { id: (id += 1), title, completed: false };
+					todos.push(todo);
+					ioTodos.emit('todos', todos);
+				})
+				// ToDoのcompletedの更新
+				.on('updateCompleted', (id, completed) => {
+					todos = todos.map((todo) =>
+						todo.id === id ? { ...todo, completed } : todo
+					);
+					ioTodos.emit('todos', todos);
+				})
+				// ToDo削除
+				.on('deleteTodo', (id) => {
+					todos = todos.filter((todo) => todo.id !== id);
+					ioTodos.emit('todos', todos);
+				});
+		});
 	},
 	(err) => {
 		console.error(err);

@@ -7,8 +7,8 @@ import 'isomorphic-fetch';
 // 各ページに関する情報の定義
 const pages = {
 	index: { title: 'すべてのToDo' },
-	active: { title: '未完了のToDo', completd: 'false' },
-	completed: { title: '完了したToDo', completd: 'true' },
+	active: { title: '未完了のToDo', completed: 'false' },
+	completed: { title: '完了したToDo', completed: 'true' },
 };
 
 // CSRでページを切り替えるためのリンク
@@ -20,7 +20,7 @@ const pageLinks = Object.keys(pages).map((page, index) => (
 
 // Reactコンポーネントを実装し、外部のモジュールで利用可能なようexport文で公開
 export default function Todos(props) {
-	const { title, completd } = pages[props.page];
+	const { title, completed } = pages[props.page];
 
 	// コンポーネントの状態の初期化と、propsの値に応じた更新
 	const [todos, setTodos] = useState([]);
@@ -38,9 +38,9 @@ export default function Todos(props) {
 		eventSource.addEventListener('message', (e) => {
 			const todos = JSON.parse(e.data);
 			setTodos(
-				typeof completd === 'undefined'
+				typeof completed === 'undefined'
 					? todos
-					: todos.filter((todo) => todo.completd === completd)
+					: todos.filter((todo) => todo.completed === completed)
 			);
 		});
 
