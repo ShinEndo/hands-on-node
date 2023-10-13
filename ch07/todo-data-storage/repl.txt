@@ -78,6 +78,26 @@ for(const title of ['ネーム','下書き']) {
 
 await fetch(baseUrl).then(res => res.json());
 
+await fetch(`${baseUrl}/${_[0].id}/completed`, {method: 'PUT'});
+
+console.log(_.status, await _.json());
+
+(await fetch(`${baseUrl}/foo/completed`, {method: 'PUT'})).status;
+
+await fetch(baseUrl).then(res => res.json());
+
+await fetch(`${baseUrl}/${_[0].id}/completed`,{method: 'DELETE'});
+
+(await fetch(`${baseUrl}/foo/completed`, {method: 'DELETE'})).status;
+
+await fetch(baseUrl).then(res => res.json());
+
+(await fetch(`${baseUrl}/${_[0].id}`, {method: 'DELETE'})).status;
+
+(await fetch(`${baseUrl}/foo`, {method: 'DELETE'})).status;
+
+await fetch(baseUrl).then(res => res.json());
+
 
 
 

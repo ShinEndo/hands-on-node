@@ -30,17 +30,14 @@ exports.update = async (id, update) => {
 				...JSON.parse(content),
 				...update,
 			};
-			return writeFile(
-				fileName,
-				JSON.stringify(todo).then(() => todo)
-			);
+			return writeFile(fileName, JSON.stringify(todo)).then(() => todo);
 		},
 		// ファイルが存在しない場合はnullを返し、それ以外はそのままエラーにする
 		(err) => (err.code === 'ENOENT' ? null : Promise.reject(err))
 	);
 };
 
-exports.delete = (id) =>
+exports.remove = (id) =>
 	unlink(`${__dirname}/${id}.json`).then(
 		() => id,
 		// ファイルが存在しない場合はnullを返し、それ以外はそのままエラーにする

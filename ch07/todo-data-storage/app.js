@@ -35,7 +35,7 @@ app.post('/api/todos', (req, res, next) => {
 // // Completedの設定、解除の共通処理
 function completedHandler(completed) {
 	return (req, res, next) =>
-		dataStorage.updata(req.params.id, { completed }).then((todo) => {
+		dataStorage.update(req.params.id, { completed }).then((todo) => {
 			if (todo) return res.json(todo);
 
 			const err = new Error('ToDo not found');
