@@ -9,7 +9,7 @@ const db = new Level(join(__dirname, 'leveldb'));
 exports.fetchAll = async () => {
 	const result = [];
 	for await (const v of db.iterator({ gt: 'todo:', lt: 'todo;' })) {
-		result.push(JSON.parse(v));
+		result.push(JSON.parse(v)[1]);
 	}
 	return result;
 };
