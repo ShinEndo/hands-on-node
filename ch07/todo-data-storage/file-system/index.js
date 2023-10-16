@@ -14,7 +14,7 @@ exports.fetchAll = async () => {
 	);
 };
 
-exports.fetchByCompletd = (completed) =>
+exports.fetchByCompleted = (completed) =>
 	exports
 		.fetchAll()
 		.then((all) => all.filter((todo) => todo.completed === completed));
