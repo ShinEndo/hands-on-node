@@ -47,7 +47,7 @@ exports.fetchAll = () =>
 
 // fetchByCompleted()の実装
 // ****************************************
-exports.fetchByCompleyted = (completed) =>
+exports.fetchByCompleted = (completed) =>
 	dbAll(`SELECT * FROM todo WHERE completed = ?`, completed).then((rows) =>
 		rows.map(rowToTodo)
 	);
