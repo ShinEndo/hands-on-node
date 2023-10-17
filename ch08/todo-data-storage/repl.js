@@ -1,93 +1,57 @@
-await fs.promises.mkdir('todos');
+const sinon = require('sinon');
 
-const todo1 = JSON.stringify({ id: 1, title: 'ネーム', completed: false });
+sinon.spy(console, 'log');
 
-await fs.promises.writeFile('todos/1.json', todo1);
+console.log('foo');
 
-await fs.promises.readdir('todos');
+sinon.assert.calledWith(console.log, 'foo');
 
-await fs.promises.readFile('todos/1.json');
+sinon.assert.calledOnce(console.log);
 
-await fs.promises.readFile('todos/1.json', 'utf8');
+sinon.assert.calledWith(console.log, 'bar');
 
-require('./todos/1.json');
+sinon.assert.calledTwice(console.log);
 
-await fs.promises.writeFile('todos/1.json', '{}');
+const spy = sinon.spy();
 
-require('./todos/1.json');
+setTimeout(spy, 0);
 
-delete require.cache[require.resolve('./todos/1.json')];
+sinon.assert.calledOnce(spy);
 
-require('./todos/1.json');
+sinon.stub(String.prototype, 'startsWith').returns(true);
 
-await fs.promises.unlink('todos/1.json');
+'foo'.startsWith('f');
 
-await fs.promises.readdir('todos');
+'foo'.startsWith('x');
 
-await fs.promises.rmdir('todos');
+sinon.assert.calledWith(String.prototype.startsWith, 'f');
 
-const filePath = 'path/to/file.txt';
+sinon.assert.calledWith(String.prototype.startsWith);
 
-path.dirname(filePath);
+sinon.assert.calledWith(String.prototype.startsWith, 'y');
 
-path.basename(filePath);
+sinon.assert.calledOnce(String.prototype.startsWith);
 
-path.extname(filePath);
+sinon.stub(String.prototype, 'endsWith');
 
-path.parse(filePath);
+'foo'.endsWith('o');
 
-path.join('path1', 'path2');
+const mock = sinon
+	.mock(JSON)
+	.expects('parse')
+	.withExactArgs('{"foo": 1}')
+	.atLeast(1)
+	.atMost(2)
+	.returns({});
 
-path.join('foo/bar', '..', '/baz', 'file.txt');
+mock.verify();
 
-require('isomorphic-fetch');
+JSON.parse('{"foo": 1}');
 
-const baseUrl = 'http://localhost:3000/api/todos';
+mock.verify();
 
-await fetch(baseUrl);
+JSON.parse('{"bar": 1}');
 
-console.log(_.status, await _.json());
+JSON.parse('{"foo": 1}');
 
-.edit
-for(const title of ['ネーム','下書き']) {
-    console.log(JSON.stringify({title}));
-    const res = await fetch(baseUrl,{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ title })
-    });
-    console.log(res.status, await res.json());
-}
-
-(await fetch(baseUrl,{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ title })
-})).status;
-
-await fetch(baseUrl).then(res => res.json());
-
-await fetch(`${baseUrl}/${_[0].id}/completed`, {method: 'PUT'});
-
-console.log(_.status, await _.json());
-
-(await fetch(`${baseUrl}/foo/completed`, {method: 'PUT'})).status;
-
-await fetch(baseUrl).then(res => res.json());
-
-await fetch(`${baseUrl}/${_[0].id}/completed`,{method: 'DELETE'});
-
-(await fetch(`${baseUrl}/foo/completed`, {method: 'DELETE'})).status;
-
-await fetch(baseUrl).then(res => res.json());
-
-(await fetch(`${baseUrl}/${_[0].id}`, {method: 'DELETE'})).status;
-
-(await fetch(`${baseUrl}/foo`, {method: 'DELETE'})).status;
-
-await fetch(baseUrl).then(res => res.json());
-
+sinon.restore();
