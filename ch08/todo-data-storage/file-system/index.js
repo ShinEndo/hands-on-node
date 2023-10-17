@@ -41,5 +41,5 @@ exports.remove = (id) =>
 	unlink(`${__dirname}/${id}.json`).then(
 		() => id,
 		// ファイルが存在しない場合はnullを返し、それ以外はそのままエラーにする
-		(err) => (err.code === 'ENONET' ? null : Promise.reject(err))
+		(err) => (err.code === 'ENOENT' ? null : Promise.reject(err))
 	);
