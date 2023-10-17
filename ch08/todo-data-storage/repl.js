@@ -1,3 +1,5 @@
+// Sinon.JS
+// **************************************
 const sinon = require('sinon');
 
 sinon.spy(console, 'log');
@@ -55,3 +57,8 @@ JSON.parse('{"bar": 1}');
 JSON.parse('{"foo": 1}');
 
 sinon.restore();
+
+// Jest
+// **************************************
+const jest = require('jest-mock');
+const expect = require('expect');

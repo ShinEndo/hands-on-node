@@ -1,5 +1,7 @@
 node --experimental-repl-await
 ------------------------------------
+## Sinon.JS
+------------------------------------
 const sinon = require('sinon');
 
 # spy
@@ -65,3 +67,6 @@ JSON.parse('{"foo": 1}');
 # restore
 ------------------------------------
 sinon.restore();
+
+## Jest
+------------------------------------
