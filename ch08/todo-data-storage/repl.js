@@ -61,4 +61,44 @@ sinon.restore();
 // Jest
 // **************************************
 const jest = require('jest-mock');
-const expect = require('expect');
+const { expect } = require('expect');
+
+jest.spyOn(console, 'log');
+
+console.log('foo');
+
+expect(console.log).toHaveBeenCalledWith('foo');
+
+expect(console.log).toHaveBeenCalledTimes(1);
+
+expect(console.log).toHaveBeenCalledWith('bar');
+
+expect(console.log).toHaveBeenCalledTimes(2);
+
+console.log.mockReturnValue(true);
+
+console.log('foo');
+
+console.log.mockImplementation((arg1, arg2) => arg1 + arg2);
+
+console.log('foo', 'bar');
+
+const emptyMock = jest.fn();
+
+emptyMock(10, 20);
+
+expect(emptyMock).toHaveBeenCalledTimes(1);
+
+const multiplyMock = jest.fn((a, b) => a * b);
+
+multiplyMock(10, 20);
+
+expect(multiplyMock).toHaveBeenCalledTimes(1);
+
+const uuid = require('uuid');
+
+uuid.v4 = 'foo';
+
+uuid.v4;
+
+jest.restoreAllMocks();
