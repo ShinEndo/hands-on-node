@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:18-alpine
 
 ARG NODE_ENV=development
 ENV NODE_ENV=${NODE_ENV}
@@ -6,7 +6,6 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-RUN npm install express
 RUN npm ci
 
 COPY . .
